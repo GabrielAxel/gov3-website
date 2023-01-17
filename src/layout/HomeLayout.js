@@ -148,7 +148,6 @@ export default function HomeLayout() {
         return '';
     }
     useEffect(() => {
-
         init_wallet();
         handelDefaultValue();
     },[]);
@@ -167,13 +166,13 @@ export default function HomeLayout() {
                         </Link>
                     </li>
                     <div className="flex flex-row float-right">
-                        {/* <li>
-                            <Link to="/postquest">
+                        <li>
+                            <Link to="/projects">
                                 <p className="text-base text-black m-6">
-                                    Post
+                                    Projects
                                 </p>
                             </Link>
-                        </li> */}
+                        </li>
                         {/* Connect Wallet */}
                         <div className='w-40 m-4 flex flex-row rounded-2xl h-10'>
                             <Dropdown
