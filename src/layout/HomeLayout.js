@@ -104,16 +104,18 @@ export default function HomeLayout() {
                     window.cardano[walletName],
                     // blockfrostApiKey
                     {
-                        0: "testneteDgsi4q4d7ZvI0StUUUT6UK5DazZeyQw", // testnet
+                        0: "preprodTjTPf4nKUTGwgIFgk1wqIj4vtpHe9qi6", // testnet
                         1: "mainnetzPROg9q7idoA9ssVcWQMPtnawNVx0C0K", // mainnet
                     }
                 );
-    
+
                 const balance = await walletApi.getBalance();
                 setUserAdaDisplay((Number(balance.lovelace) / 1000000).toFixed(0));
                 localStorage.setItem('balance', JSON.stringify(balance));
 
                 window.dispatchEvent(new Event("storage"));
+
+
             }
 
             setAlertInformation({
@@ -124,6 +126,7 @@ export default function HomeLayout() {
 
         }
         catch (e) {
+            console.log(123)
             console.log(e)
             if (e.info) e = e.info;
             setAlertInformation({
@@ -135,7 +138,6 @@ export default function HomeLayout() {
             setUserAdaDisplay('');
         }
     }
-
     function handelDefaultValue() {
         const walletName = localStorage.getItem('wallet');
     

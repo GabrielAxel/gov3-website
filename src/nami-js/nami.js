@@ -488,15 +488,27 @@ class MultipleWalletApi {
     return await enableWallet.signTx(transaction, partialSign)
   }
 
-  async signData(string) {
-    let address = await getAddressHex();
-    const enableWallet = await this.Wallet.enable();
 
-    let coseSign1Hex = await enableWallet.signData(
-      address,
-      Buffer.from(string, "ascii").toString("hex")
-    );
-    return coseSign1Hex;
+  async signData(string) {
+    // let address = await this.getHexAddress();
+    // const enableWallet = await this.Wallet.enable();
+
+    // let coseSign1Hex = await enableWallet.signData(
+    //   address,
+    //   // string,
+    //   // Buffer.from(string, "ascii").toString("hex")
+    //   // Buffer.from(string).toString("hex")
+    //   '1234'
+    // );
+    // console.log(coseSign1Hex)
+
+    // return coseSign1Hex;
+
+    const enableWallet = await this.Wallet.enable();
+    let addr = await enableWallet.getUsedAddresses();
+    let payload = new Buffer.from(string).toString("hex"); //hex of "Hello World!"
+    let signed = await enableWallet.signData(addr[0], payload);
+    return signed
   }
 
   hashMetadata(metadata) {
@@ -1129,7 +1141,7 @@ class MultipleWalletApi {
   }) {
     let networkEndpoint =
       networkId == 0
-        ? "https://cardano-testnet.blockfrost.io/api/v0"
+        ? "https://cardano-preprod.blockfrost.io/api/v0"
         : "https://cardano-mainnet.blockfrost.io/api/v0";
     let blockfrostApiKey = this.getApiKey(networkId);
 

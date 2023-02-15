@@ -30,7 +30,6 @@ export default function Profile() {
         type: "information",
     });
     async function init_wallet() {
-        console.log('init wallet')
         try {
             const walletName = localStorage.getItem('wallet');
             if (walletName) {
@@ -40,7 +39,7 @@ export default function Profile() {
                     window.cardano[walletName],
                     // blockfrostApiKey
                     {
-                        0: "testneteDgsi4q4d7ZvI0StUUUT6UK5DazZeyQw", // testnet
+                        0: "preprodTjTPf4nKUTGwgIFgk1wqIj4vtpHe9qi6", // testnet
                         1: "mainnetzPROg9q7idoA9ssVcWQMPtnawNVx0C0K", // mainnet
                     }
                 );
@@ -310,6 +309,8 @@ export default function Profile() {
             });
         }
     }
+
+    
     return (
         <div className="min-h-screen bg-cover bg-[url('./images/background.svg')]">
             <div className='p-5'></div>

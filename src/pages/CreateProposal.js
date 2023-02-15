@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import Select from 'react-select';
-import { Routes, Route, useParams } from 'react-router-dom';
+import { Routes, Route, useParams, json } from 'react-router-dom';
 import DateTimePicker from 'react-datetime-picker';
 
 import AlertModal from "../alert";
@@ -8,7 +8,7 @@ import MultipleWalletApi, { Cardano } from '../nami-js';
 let walletApi;
 
 export default function CreateProposal() {
-    let { proposalId } = useParams();
+    let { projectId } = useParams();
 
     const [alertInformation, setAlertInformation] = useState({
         content: "",
@@ -30,6 +30,7 @@ export default function CreateProposal() {
     })
 
     useEffect(() => {
+        csl();
         let walletBalance_str = localStorage.getItem('balance');
         if (walletBalance_str) setBalance(JSON.parse(walletBalance_str).assets);
 
@@ -41,7 +42,6 @@ export default function CreateProposal() {
         return () => {
             window.removeEventListener('storage', null)
         }
-        
     },[localStorageChange]);
 
     useEffect(() => {
@@ -50,9 +50,117 @@ export default function CreateProposal() {
         setStartTime(defaultDate);
         setEndTime(defaultDate);
     }, [])
+    async function csl() {
+        try {    
+            const walletName = localStorage.getItem('wallet');
+            if (walletName) {
+                const S = await Cardano();
+                walletApi = new MultipleWalletApi(
+                    S,
+                    window.cardano[walletName],
+                    // blockfrostApiKey
+                    {
+                        0: "preprodTjTPf4nKUTGwgIFgk1wqIj4vtpHe9qi6", // testnet
+                        1: "mainnetzPROg9q7idoA9ssVcWQMPtnawNVx0C0K", // mainnet
+                    }
+                );
+            }
+        }
+        catch (e) {
+            console.log(e)
+            if (e.info) e = e.info;
+            setAlertInformation({
+                type: "information",
+                isDisplayed: true,
+                content: `${e}`,
+            });
+        }
+    }
 
     async function submitProposal() {
+        try {
+            setAlertInformation({
+                type: "loading",
+                isDisplayed: true,
+                content: null,
+            });
 
+            if (!walletApi) {
+                setAlertInformation({
+                    type: "information",
+                    isDisplayed: true,
+                    content: `Connect wallet first`,
+                });
+                return;
+            }
+            if (choices.includes('')) {
+                setAlertInformation({
+                    type: "information",
+                    isDisplayed: true,
+                    content: `Choices cannot be blank`,
+                });
+                return;
+            }
+
+            const myAddress = await walletApi.getAddress();
+            if (!myAddress || !projectId || !title || !description || !choices || !startTime || !endTime) {
+                setAlertInformation({
+                    type: "information",
+                    isDisplayed: true,
+                    content: `Proposal not complete`,
+                });
+                return;
+            }
+
+            const sign_data = await walletApi.signData(`CreateProposal:project_${projectId}`);
+            const body = {
+                'address': myAddress,
+                'project_id': parseInt(projectId),
+                'title': title,
+                'description': description,
+                'choices': JSON.stringify(choices),
+                'start_time_str': startTime.toUTCString(),
+                'start_time_unix': startTime.getTime(),
+                'end_time_str': endTime.toUTCString(),
+                'end_time_unix': endTime.getTime(),
+                'key': sign_data.key,
+                'signature': sign_data.signature,
+            }
+            const data = await (await fetch(
+                // 'http://localhost:8787/gov3/CreateProposal',
+                'https://api.aidev-cardano.com//gov3/CreateProposal',
+                {
+                    method:'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(body)
+                }
+            )).json();
+
+            if (data.error) {
+                console.log(data.error);
+                setAlertInformation({
+                    type: "information",
+                    isDisplayed: true,
+                    content: `${data.error}`,
+                });
+                return;
+            }
+            setAlertInformation({
+                type: "information",
+                isDisplayed: true,
+                content: `Create proposal successfully`,
+            });
+        }
+        catch (e) {
+            console.log(e);
+            setAlertInformation({
+                type: "information",
+                isDisplayed: true,
+                content: `Error: ${e}`,
+            });
+        }
     }
     function handleAddChoices() {
         // make temp a new arry to trigger render
@@ -79,9 +187,12 @@ export default function CreateProposal() {
         temp.splice(num, 1);
         setChoices(temp);
     }
+
+
     return (
         <div className="min-h-screen bg-cover bg-[url('./images/background.svg')]">
         {/* <div className="min-h-screen bg-cover bg-[#ffffff]"> */}
+
             <p className='mt-5 text-center font-bold text-3xl'>Create Proposal</p>
             <div className='pt-5 flex flex-col'>
                 <div className='m-auto flex flex-col rounded-lg border-2 border-r-4 border-b-4 border-black w-5/6 md:w-3/5 h-auto'>
@@ -120,7 +231,6 @@ export default function CreateProposal() {
                                     <input type="text" className='focus:outline-0 w-full text-center rounded-lg' placeholder={`choice ${index+1}`}
                                         onChange={(event) => {
                                             handleUpdateChoices(index, event.target.value);
-                                            console.log(choices)
                                         }}
                                     />
                                     <button onClick={()=>{handleDeleteChoicesn(index)}} className='mr-2 '>
