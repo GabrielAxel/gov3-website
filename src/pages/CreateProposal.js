@@ -128,7 +128,7 @@ export default function CreateProposal() {
             }
             const data = await (await fetch(
                 // 'http://localhost:8787/gov3/CreateProposal',
-                'https://api.aidev-cardano.com//gov3/CreateProposal',
+                'https://api.aidev-cardano.com/gov3/CreateProposal',
                 {
                     method:'POST',
                     headers: {

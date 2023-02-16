@@ -90,7 +90,7 @@ function Project(props) {
                                             Proposal
                                         </p>
                                         <p className='mt-2 text-center text-left text-sm font-semibold text-black'>
-                                            {project.proposal_asset_name}
+                                            {project.proposal_asset_quantity} {project.proposal_asset_name}
                                         </p>
                                     </div>
                                     <div className='w-1/2 flex flex-col justify-center'>
