@@ -333,9 +333,9 @@ export default function Proposals() {
                                 <p className='mt-3 text-3xl text-black'>
                                     {proposalContent.title}
                                 </p>
-                                <p className='mt-5 text-sm text-blue-700'>
+                                <Link to={`/user/${proposalContent.address}`} className='mt-5 text-sm text-blue-700'>
                                     by {proposalContent.address.slice(0,10)}...
-                                </p>
+                                </Link>
                                 <pre className='whitespace-pre-wrap break-normal mt-10 text-base text-black'>
                                     {proposalContent.description}
                                 </pre>

@@ -8,6 +8,8 @@ import Projects from './pages/Projects';
 import Proposals from './pages/Proposals';
 import CreateProposal from './pages/CreateProposal';
 import ProposalContent from './pages/ProposalContent';
+import OthersProfile from './pages/OthersProfile';
+import Delegate from './pages/Delegate';
 
 
 import './App.css';
@@ -21,7 +23,11 @@ export default function App() {
       <Routes>
         <Route path="/" element={<HomeLayout />}>
             <Route index element={<Projects />} />
+            
             <Route path="profile" element={<Profile />} />
+
+            <Route path="delegate" element={<Delegate />} />
+
             <Route path="projects" >
               <Route index element={<Projects />} />
               <Route path=":projectId" element={<Proposals />} />
@@ -29,6 +35,10 @@ export default function App() {
 
             <Route path="proposal">
               <Route path=":proposalId" element={<ProposalContent />} />
+            </Route>
+
+            <Route path="user">
+              <Route path=":userAddress" element={<OthersProfile />} />
             </Route>
 
             <Route path="create_proposal">

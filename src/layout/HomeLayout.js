@@ -174,7 +174,16 @@ export default function HomeLayout() {
                                     Projects
                                 </p>
                             </Link>
+
                         </li>
+                        <li>
+                            <Link to="/delegate">
+                                <p className="text-base text-black m-6">
+                                    Delegate
+                                </p>
+                            </Link>
+                        </li>
+
                         {/* Connect Wallet */}
                         <div className='w-40 m-4 flex flex-row rounded-2xl h-10'>
                             <Dropdown
