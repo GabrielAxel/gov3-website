@@ -39,5 +39,5 @@ This command generates static content into the `dist` directory and can be serve
 $ npm run start
 ```
 
-This command serve the `dist` directory and can be served using any static contents hosting service.
+This command serve the static content `dist` directory with a nodejs express server.
 
