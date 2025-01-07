@@ -1,3 +1,5 @@
+*This repository has been cloned from https://github.com/eric248550/gov3-website -- Eric was a dev on this project, which I led.*
+
 # Gov3 - DAO Delegation 
 
 **Cardano** DAO Delegation Dashboard
